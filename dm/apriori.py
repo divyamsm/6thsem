@@ -2,16 +2,15 @@ import csv
 import itertools
 from collections.abc import Iterable
 
-def read_transactions(filename='td1.csv'):
+def read_transactions(filename='retail_dataset.csv'):
     trlist = []
     with open(filename) as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         for row in csv_reader:
             for i in range(len(row)):
-                row[i] = int(row[i])
+                row[i] = str(row[i])
             trlist.append(row)
     return (trlist)
-
 
 def filter(l0,freqdict,min_sup):
     l1 = []
@@ -22,12 +21,16 @@ def filter(l0,freqdict,min_sup):
     return l1
 
 
-trlist = read_transactions("retail_dataset.csv")
+trlist = read_transactions()
 print("Transaction list:",trlist)
+
+
+#PARAMETERS
 min_support = len(trlist)*2/9
+min_confidence = 0.5
 
 
-def getfrequency(freqict):
+def getfrequency(freqdict):
     for i in trlist:
         for j in i:
             # j=(j,)
@@ -39,7 +42,6 @@ def getfrequency(freqict):
     return freqdict
 
 
-#
 freqdict = getfrequency({})
 l1 = []
 for i in freqdict.items():
@@ -58,9 +60,7 @@ def getl(curc,trlist):
                 ct+=1
                 #print('True')
         #print(elementgroup,ct)
-        if elementgroup == (39,48):
-            print("stored")
-        freqdict[elementgroup] = ct
+        freqdict[tuple(sorted(elementgroup))] = ct
         if ct >= min_support:
             curl.append(list(elementgroup))
     return curl
@@ -116,17 +116,16 @@ for i in llist:
                     x = tuple(sorted(x))
                     #print("final", x)
                     if len(a) == 1:
-                        y1 = int(a.pop())
+                        y1 = a.pop()
                         y = y1
                         a.add(y1)
                     else:
-                        y = tuple(a)
-                    print("x is ",x)
-                    print("y is ",y)
+                        y = tuple(sorted(a))
                     confidence = freqdict[x]/freqdict[y]
-                    confidence_table.append([a,b,confidence])
+                    if [a,b,confidence] not in confidence_table:
+                        confidence_table.append([a,b,confidence])
 
-min_confidence = 0.5
+
 
 for i in confidence_table:
     if i[2]>= min_confidence:
