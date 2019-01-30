@@ -1,4 +1,4 @@
-'''Read Input'''
+'''Read Input''' 
 from numpy import binary_repr
 entry = str(input("Give the string "))
 
