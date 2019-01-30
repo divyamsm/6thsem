@@ -78,7 +78,7 @@ def middlespaces(entry_p):
             entry += i
     return entry
 
-#repetitive for the getp64 func
+#repetitive for the getp64 function
 def getbinary64chars(entry):
     number = []
     for i in range(len(entry)):
